@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ store_settings.store_name }} - {{ store_settings.store_tagline }}{% endblock %}</title>
+    <meta name="description" content="Discover premium, authentic handloom clothing and stoles crafted by master weavers across India. Organic Khadi, silk Ikat, and sustainable linen garments.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        :root {
+            --primary: {{ store_settings.primary_color }};
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Alert bar -->
+    <div style="background-color: var(--primary); color: white; text-align: center; font-size: 0.8rem; font-weight: 500; padding: 0.4rem 0; letter-spacing: 1px;">
+        {{ store_settings.alert_bar_text }}
+    </div>
+
+    <!-- Main Header -->
+    <header>
+        <div class="container nav-wrapper">
+            <a href="/" class="logo">
+                <span class="logo-main">{{ store_settings.store_name.split(' ')[0].upper() }}</span>
+                <span class="logo-sub">{% if ' ' in store_settings.store_name %}{{ store_settings.store_name.split(' ', 1)[1] }}{% else %}Handlooms{% endif %}</span>
+            </a>
+            
+            <nav class="nav-links">
+                <a href="/" class="{% if request.path == '/' %}active{% endif %}">Home</a>
+                <a href="/products" class="{% if request.path == '/products' %}active{% endif %}">Shop Catalog</a>
+                <a href="/cart" class="{% if request.path == '/cart' %}active{% endif %}">Shopping Cart</a>
+                <a href="/admin" class="admin-pill {% if request.path.startswith('/admin') %}active{% endif %}">Artisan Portal</a>
+            </nav>
+            
+            <div class="nav-actions">
+                <!-- Search Icon Link -->
+                <a href="/products" style="color: var(--secondary);" title="Search products">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </a>
+                
+                <!-- Cart Button with badge -->
+                <button class="cart-icon-btn" id="cart-toggle" title="View cart">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    <span class="cart-badge" style="display: none;">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Cart Drawer (Sliding from Right) -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <h3>Shopping Cart</h3>
+            <button class="cart-close-btn" id="cart-close">&times;</button>
+        </div>
+        
+        <!-- Cart Items list built by main.js dynamically -->
+        <div class="cart-items-list">
+            <div class="cart-empty-msg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                <p>Your shopping cart is empty.</p>
+                <a href="/products" class="btn btn-outline" style="margin-top: 1rem;">Browse Products</a>
+            </div>
+        </div>
+        
+        <div class="cart-footer">
+            <div class="cart-summary-row">
+                <span>Subtotal:</span>
+                <span class="cart-summary-total">₹0.00</span>
+            </div>
+            <a href="/checkout" id="drawer-checkout-btn" class="btn btn-primary" style="width: 100%; text-align: center; display: none;">Proceed to Checkout</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-grid">
+            <div class="footer-col footer-about">
+                <a href="/" class="logo" style="margin-bottom: 1.5rem;">
+                    <span class="logo-main" style="color: var(--accent);">{{ store_settings.store_name.split(' ')[0].upper() }}</span>
+                    <span class="logo-sub" style="color: var(--bg-warm);">{% if ' ' in store_settings.store_name %}{{ store_settings.store_name.split(' ', 1)[1] }}{% else %}Handlooms{% endif %}</span>
+                </a>
+                <p>Authentic, sustainable, and handcrafted garments connecting India's finest loom artisans directly with design enthusiasts globally.</p>
+                <div style="font-size: 0.85rem; margin-top: 1rem; opacity: 0.8; line-height: 1.6;">
+                    <strong>Email:</strong> {{ store_settings.contact_email }}<br>
+                    <strong>Phone:</strong> {{ store_settings.contact_phone }}<br>
+                    <strong>Address:</strong> {{ store_settings.contact_address }}
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Shop Categories</h4>
+                <ul class="footer-links">
+                    <li><a href="/products?category=Saree">Handwoven Sarees</a></li>
+                    <li><a href="/products?category=Kurta">Artisan Kurtas</a></li>
+                    <li><a href="/products?category=Shirt">Linen & Cotton Shirts</a></li>
+                    <li><a href="/products?category=Stole">Hand-printed Stoles</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Heritage & Weaves</h4>
+                <ul class="footer-links">
+                    <li><a href="/products?weave=Ikat">Pochampally Ikat</a></li>
+                    <li><a href="/products?weave=Banarasi">Varanasi Banarasi</a></li>
+                    <li><a href="/products?material=Khadi">Organic Khadi</a></li>
+                    <li><a href="/products?material=Linen">Premium Linen</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col footer-newsletter">
+                <h4>Artisan Dispatch</h4>
+                <p>Subscribe to receive stories from our weaver collectives and exclusive pre-orders.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault(); showToast('Subscribed! Thank you for supporting weavers.'); this.reset();">
+                    <input type="email" placeholder="Your Email Address" required>
+                    <button type="submit" class="btn btn-accent" style="padding: 0.6rem 1.2rem;">Join</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="container footer-bottom">
+            <p>&copy; 2026 {{ store_settings.store_name }} Private Limited. All rights reserved.</p>
+            <p>Made with Care for Indian Weavers • Sustainable & Fair-Trade</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Trigger initial cart load to set badges correct on page load
+        fetchCartJSON();
+    </script>
+</body>
+</html>

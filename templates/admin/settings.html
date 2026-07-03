@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vastra Admin - Store Settings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        :root {
+            --primary: {{ settings.primary_color }};
+        }
+        .color-presets {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .color-bubble {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 0 0 1px #dcdcdc;
+            transition: transform 0.2s;
+        }
+        .color-bubble:hover {
+            transform: scale(1.15);
+        }
+        .color-bubble.active {
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+    </style>
+</head>
+<body style="background-color: #f7f5f0;">
+
+    <!-- Header bar -->
+    <div style="background-color: var(--secondary); color: white; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; border-bottom: 3px solid var(--primary);">
+        <div class="logo">
+            <span class="logo-main" style="color: var(--accent); font-size:1.5rem;">VASTRA ADMIN</span>
+            <span class="logo-sub" style="color: white; font-size:0.6rem; letter-spacing:3px;">Artisan & Operations Portal</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.9rem;">
+            <span>Logged in as <strong>Artisan Partner</strong></span>
+            <a href="/" class="btn btn-accent" style="padding: 0.4rem 1rem; font-size: 0.8rem; border-radius: 4px;">Return to Storefront</a>
+        </div>
+    </div>
+
+    <!-- Admin Grid layout -->
+    <div class="admin-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar">
+            <ul class="admin-sidebar-menu">
+                <li>
+                    <a href="/admin" class="{% if request.path == '/admin' %}active{% endif %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                        Order Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/products" class="{% if request.path == '/admin/products' %}active{% endif %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                        Artisan Inventory
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/settings" class="{% if request.path == '/admin/settings' %}active{% endif %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        Brand Settings
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Dashboard Panel -->
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1 style="font-size: 2rem;">Brand Customization Portal</h1>
+                <div style="font-size: 0.9rem; color: var(--text-muted);">Dynamically control website design, titles, and details</div>
+            </div>
+
+            <!-- Settings Form Card -->
+            <div class="checkout-form-card" style="padding: 2.5rem; max-width: 900px; margin: 0 auto;">
+                <form action="/admin/settings" method="POST">
+                    
+                    <!-- Section 1: Brand & Design -->
+                    <div class="checkout-section">
+                        <h3><span>1</span> Store Identity & Theme</h3>
+                        
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label for="store-name">Brand Name *</label>
+                                <input type="text" id="store-name" name="store_name" required value="{{ settings.store_name }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="store-tagline">Brand Subtitle / Tagline *</label>
+                                <input type="text" id="store-tagline" name="store_tagline" required value="{{ settings.store_tagline }}">
+                            </div>
+                        </div>
+
+                        <!-- Brand Theme Color Selection -->
+                        <div class="form-group">
+                            <label>Primary Theme Color *</label>
+                            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                                <!-- Native Color Picker -->
+                                <input type="color" id="primary-color-picker" name="primary_color" value="{{ settings.primary_color }}" style="width: 60px; height: 44px; border-radius: 4px; border: 1px solid var(--border-color); cursor: pointer; padding: 2px;">
+                                <div>
+                                    <span style="font-size: 0.85rem; font-weight: 600; display: block;">Pick Custom Color</span>
+                                    <span style="font-size: 0.8rem; color: var(--text-muted);">Current Code: <strong id="color-hex-text">{{ settings.primary_color }}</strong></span>
+                                </div>
+                            </div>
+                            
+                            <div class="color-presets">
+                                <span style="font-size: 0.85rem; align-self: center; font-weight:600; color: var(--secondary);">Presets:</span>
+                                <div class="color-bubble" style="background-color: #A24B31;" data-color="#A24B31" title="Terracotta Red"></div>
+                                <div class="color-bubble" style="background-color: #1E2D3D;" data-color="#1E2D3D" title="Deep Indigo"></div>
+                                <div class="color-bubble" style="background-color: #2E7D32;" data-color="#2E7D32" title="Forest Green"></div>
+                                <div class="color-bubble" style="background-color: #D49B54;" data-color="#D49B54" title="Golden Mustard"></div>
+                                <div class="color-bubble" style="background-color: #A8201A;" data-color="#A8201A" title="Crimson Red"></div>
+                                <div class="color-bubble" style="background-color: #4A148C;" data-color="#4A148C" title="Royal Purple"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Section 2: Banner Copywriting & Thresholds -->
+                    <div class="checkout-section">
+                        <h3><span>2</span> Banner Content & Limits</h3>
+                        
+                        <div class="form-group">
+                            <label for="alert-bar-text">Alert Bar Announcement Text *</label>
+                            <input type="text" id="alert-bar-text" name="alert_bar_text" required value="{{ settings.alert_bar_text }}">
+                        </div>
+
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label for="hero-title">Hero Banner Title *</label>
+                                <input type="text" id="hero-title" name="hero_title" required value="{{ settings.hero_title }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="hero-subtitle">Hero Banner Subtitle *</label>
+                                <input type="text" id="hero-subtitle" name="hero_subtitle" required value="{{ settings.hero_subtitle }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hero-description">Hero Banner Main Description Copy *</label>
+                            <textarea id="hero-description" name="hero_description" rows="3" required>{{ settings.hero_description }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="free-shipping-threshold">Free Shipping Trigger Threshold (INR ₹) *</label>
+                            <input type="number" step="0.01" id="free-shipping-threshold" name="free_shipping_threshold" required value="{{ settings.free_shipping_threshold }}">
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Contact & Store Location -->
+                    <div class="checkout-section">
+                        <h3><span>3</span> Footer Contact Information</h3>
+                        
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label for="contact-email">Customer Support Email *</label>
+                                <input type="email" id="contact-email" name="contact_email" required value="{{ settings.contact_email }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-phone">Public Contact Phone Number *</label>
+                                <input type="text" id="contact-phone" name="contact_phone" required value="{{ settings.contact_phone }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-address">Artisan Loom Center Address *</label>
+                            <textarea id="contact-address" name="contact_address" rows="2" required>{{ settings.contact_address }}</textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; height: 50px; font-size: 1.1rem; margin-top: 1rem;">
+                        💾 Save Brand Configurations & Deploy Live
+                    </button>
+                    
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const picker = document.getElementById('primary-color-picker');
+            const hexText = document.getElementById('color-hex-text');
+            const bubbles = document.querySelectorAll('.color-bubble');
+            
+            // Sync picker change to description text
+            picker.addEventListener('input', function() {
+                hexText.textContent = picker.value;
+                document.documentElement.style.setProperty('--primary', picker.value);
+            });
+            
+            // Sync preset click to picker value
+            bubbles.forEach(bubble => {
+                bubble.addEventListener('click', function() {
+                    const selectedColor = bubble.getAttribute('data-color');
+                    picker.value = selectedColor;
+                    hexText.textContent = selectedColor;
+                    document.documentElement.style.setProperty('--primary', selectedColor);
+                });
+            });
+        });
+    </script>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <script>
+              showToast("{{ message }}");
+          </script>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+</body>
+</html>

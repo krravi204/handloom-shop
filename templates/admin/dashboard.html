@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vastra Admin - Artisan & Order Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body style="background-color: #f7f5f0;">
+
+    <!-- Header bar -->
+    <div style="background-color: var(--secondary); color: white; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; border-bottom: 3px solid var(--primary);">
+        <div class="logo">
+            <span class="logo-main" style="color: var(--accent); font-size:1.5rem;">VASTRA ADMIN</span>
+            <span class="logo-sub" style="color: white; font-size:0.6rem; letter-spacing:3px;">Artisan & Operations Portal</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.9rem;">
+            <span>Logged in as <strong>Artisan Partner</strong></span>
+            <a href="/" class="btn btn-accent" style="padding: 0.4rem 1rem; font-size: 0.8rem; border-radius: 4px;">Return to Storefront</a>
+        </div>
+    </div>
+
+    <!-- Admin Grid layout -->
+    <div class="admin-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar">
+            <ul class="admin-sidebar-menu">
+                <li>
+                    <a href="/admin" class="{% if request.path == '/admin' %}active{% endif %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                        Order Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/products" class="{% if request.path == '/admin/products' %}active{% endif %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                        Artisan Inventory
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/settings" class="{% if request.path == '/admin/settings' %}active{% endif %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        Brand Settings
+                    </a>
+                </li>
+            </ul>
+            
+            <div style="margin-top: 5rem; padding: 1rem; background-color: rgba(255,255,255,0.03); border-radius: 4px; font-size: 0.75rem; border: 1px dashed rgba(255,255,255,0.1); line-height: 1.4;">
+                🔒 <strong>Artisan Portal:</strong> This portal is a mock admin panel enabling the operator to manage inventory and ship orders to demo functional e-commerce cycles.
+            </div>
+        </aside>
+
+        <!-- Main Dashboard Panel -->
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1 style="font-size: 2rem;">Order Operations & Metrics</h1>
+                <div style="font-size: 0.9rem; color: var(--text-muted);">Real-time metrics</div>
+            </div>
+
+            <!-- Stats grid -->
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <span class="stat-label">Total Gross Sales</span>
+                    <span class="stat-value">₹{{ "{:,.2f}".format(metrics.total_sales) }}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Orders Received</span>
+                    <span class="stat-value">{{ metrics.total_orders }}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Low Stock Warning</span>
+                    <span class="stat-value" style="color: {% if metrics.low_stock > 0 %}#dc3545{% else %}var(--secondary){% endif %};">
+                        {{ metrics.low_stock }} products
+                    </span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Average Ticket</span>
+                    <span class="stat-value">₹{{ "{:,.2f}".format(metrics.avg_order) }}</span>
+                </div>
+            </div>
+
+            <!-- Orders Table card -->
+            <div class="table-card">
+                <div class="table-card-header">
+                    <h3 style="font-size: 1.25rem; font-weight: 600;">Customer Orders Log</h3>
+                    <span>Showing all orders (Newest first)</span>
+                </div>
+                
+                {% if orders %}
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date / Time</th>
+                            <th>Customer Details</th>
+                            <th>Purchased Items</th>
+                            <th>Total Price</th>
+                            <th>Status Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td><strong>#VH-{{ 10000 + order.id }}</strong></td>
+                            <td style="font-size: 0.8rem; color: var(--text-muted);">{{ order.created_at.strftime('%d-%b-%Y %I:%M %p') }}</td>
+                            <td>
+                                <div><strong>{{ order.customer_name }}</strong></div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">{{ order.customer_email }}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">{{ order.customer_phone }}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted); max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ order.shipping_address }}">
+                                    📍 {{ order.shipping_address }}
+                                </div>
+                            </td>
+                            <td>
+                                <ul style="list-style: disc; margin-left: 1rem; font-size: 0.85rem;">
+                                    {% for item in order.items %}
+                                    <li>{{ item.quantity }}x {{ item.product.name }} ({{ item.product.material }})</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td style="font-weight: 700; color: var(--secondary);">₹{{ "{:,.2f}".format(order.total_amount) }}</td>
+                            <td>
+                                <form action="/admin/order/update/{{ order.id }}" method="POST" style="display:flex; align-items:center; gap:0.5rem;">
+                                    <select name="status" class="status-select" onchange="this.form.submit()">
+                                        <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending Approval</option>
+                                        <option value="Processing" {% if order.status == 'Processing' %}selected{% endif %}>Processing</option>
+                                        <option value="Shipped" {% if order.status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                                        <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                        <option value="Cancelled" {% if order.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                                    </select>
+                                </form>
+                                <div style="margin-top: 0.35rem;">
+                                    <span class="status-pill {{ order.status.lower() }}">{{ order.status }}</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div style="text-align: center; padding: 4rem 0; color: var(--text-muted);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4; margin-bottom: 1rem;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    <p>No orders recorded in system yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <script>
+              showToast("{{ message }}");
+          </script>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+</body>
+</html>

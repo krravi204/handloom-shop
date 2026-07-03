@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Vastra Handlooms - Catalog{% endblock %}
+
+{% block content %}
+<section class="section" style="padding: 3rem 0;">
+    <div class="container">
+        
+        <!-- Breadcrumbs & Stats -->
+        <div style="margin-bottom: 2rem; font-size: 0.9rem; color: var(--text-muted);">
+            <a href="/" style="color: var(--primary);">Home</a> &nbsp;/&nbsp; <span>Shop Catalog</span>
+        </div>
+        
+        <div class="shop-layout">
+            <!-- Sidebar Filters -->
+            <aside class="filter-sidebar">
+                <form id="filter-form" action="/products" method="GET">
+                    <!-- Preserve search query in filter form if present -->
+                    {% if query %}
+                    <input type="hidden" name="q" value="{{ query }}">
+                    {% endif %}
+                    
+                    <div class="filter-section">
+                        <h4>Category</h4>
+                        {% for cat in categories %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="category" value="{{ cat }}" 
+                                   {% if cat in active_filters.category %}checked{% endif %}>
+                            {{ cat }}s
+                        </label>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4>Material</h4>
+                        {% for mat in materials %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="material" value="{{ mat }}"
+                                   {% if mat in active_filters.material %}checked{% endif %}>
+                            {{ mat }}
+                        </label>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4>Weave Type</h4>
+                        {% for w in weaves %}
+                        <label class="filter-option">
+                            <input type="checkbox" name="weave" value="{{ w }}"
+                                   {% if w in active_filters.weave %}checked{% endif %}>
+                            {{ w }}
+                        </label>
+                        {% endfor %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 0.85rem; padding: 0.6rem;">Apply Filters</button>
+                    
+                    <a href="/products" class="btn btn-outline" style="width: 100%; font-size: 0.85rem; padding: 0.6rem; margin-top: 0.75rem; text-align: center;">Reset Filters</a>
+                </form>
+            </aside>
+            
+            <!-- Main Catalog Content -->
+            <main>
+                <!-- Catalog Header (Search & Sort) -->
+                <div class="catalog-header">
+                    <form action="/products" method="GET" class="search-box">
+                        <!-- Preserve active filters in search form -->
+                        {% for cat in active_filters.category %}
+                        <input type="hidden" name="category" value="{{ cat }}">
+                        {% endfor %}
+                        {% for mat in active_filters.material %}
+                        <input type="hidden" name="material" value="{{ mat }}">
+                        {% endfor %}
+                        {% for w in active_filters.weave %}
+                        <input type="hidden" name="weave" value="{{ w }}">
+                        {% endfor %}
+                        
+                        <input type="text" name="q" placeholder="Search handloom products (e.g. Silk, Ikat, Kurta)..." value="{{ query or '' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </form>
+                    
+                    <div class="sort-selector" style="display: flex; align-items: center; gap: 0.75rem;">
+                        <span style="font-size: 0.9rem; font-weight:600; color: var(--secondary);">Sort:</span>
+                        <select id="sort-by">
+                            <option value="featured" {% if active_sort == 'featured' %}selected{% endif %}>Artisan Pick</option>
+                            <option value="price_low" {% if active_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                            <option value="price_high" {% if active_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                            <option value="name_asc" {% if active_sort == 'name_asc' %}selected{% endif %}>Alphabetical: A-Z</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Active Filters Indicators -->
+                {% if active_filters.category or active_filters.material or active_filters.weave or query %}
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; align-items: center;">
+                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--secondary);">Active Filters:</span>
+                    {% if query %}
+                        <span style="background-color: var(--border-color); font-size: 0.8rem; padding: 0.25rem 0.6rem; border-radius: 2px; display: inline-flex; align-items: center; gap: 0.25rem;">
+                            Search: "{{ query }}"
+                        </span>
+                    {% endif %}
+                    {% for cat in active_filters.category %}
+                        <span style="background-color: var(--border-color); font-size: 0.8rem; padding: 0.25rem 0.6rem; border-radius: 2px;">{{ cat }}</span>
+                    {% endfor %}
+                    {% for mat in active_filters.material %}
+                        <span style="background-color: var(--border-color); font-size: 0.8rem; padding: 0.25rem 0.6rem; border-radius: 2px;">{{ mat }}</span>
+                    {% endfor %}
+                    {% for w in active_filters.weave %}
+                        <span style="background-color: var(--border-color); font-size: 0.8rem; padding: 0.25rem 0.6rem; border-radius: 2px;">{{ w }}</span>
+                    {% endfor %}
+                    <a href="/products" style="font-size: 0.8rem; color: var(--primary); text-decoration: underline; margin-left: 0.5rem;">Clear All</a>
+                </div>
+                {% endif %}
+                
+                <!-- Product Grid -->
+                {% if products %}
+                <div class="grid-3">
+                    {% for product in products %}
+                    <div class="product-card">
+                        {% if product.featured %}
+                        <span class="prod-tag">Artisan Pick</span>
+                        {% endif %}
+                        <div class="prod-img-wrapper">
+                            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                        </div>
+                        <div class="prod-details">
+                            <span class="prod-meta">{{ product.material }} • {{ product.weave }}</span>
+                            <a href="/product/{{ product.id }}"><h3 class="prod-title" title="{{ product.name }}">{{ product.name }}</h3></a>
+                            <div class="prod-price">₹{{ "{:,.2f}".format(product.price) }}</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                                {% if product.stock > 0 %}
+                                    <span style="color: #28a745; font-weight:600;">In Stock ({{ product.stock }})</span>
+                                {% else %}
+                                    <span style="color: #dc3545; font-weight:600;">Out of Stock</span>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="prod-actions">
+                                <a href="/product/{{ product.id }}" class="btn btn-outline">Details</a>
+                                {% if product.stock > 0 %}
+                                <button class="btn btn-primary" onclick="addToCart({{ product.id }})">Add to Cart</button>
+                                {% else %}
+                                <button class="btn btn-primary" style="opacity: 0.5; cursor: not-allowed;" disabled>Sold Out</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div style="text-align: center; padding: 5rem 0; background-color: var(--bg-white); border-radius: var(--border-radius); border: 1px solid var(--border-color);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted); opacity: 0.4; margin-bottom: 1.5rem;"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                    <h3>No products found</h3>
+                    <p style="color: var(--text-muted); margin-top: 0.5rem; margin-bottom: 1.5rem;">Try adjusting your filters or search keywords.</p>
+                    <a href="/products" class="btn btn-primary">Reset All Filters</a>
+                </div>
+                {% endif %}
+            </main>
+        </div>
+    </div>
+</section>
+{% endblock %}

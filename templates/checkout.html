@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Vastra Handlooms - Checkout{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        
+        <div style="margin-bottom: 2rem; font-size: 0.9rem; color: var(--text-muted);">
+            <a href="/" style="color: var(--primary);">Home</a> &nbsp;/&nbsp; 
+            <a href="/cart" style="color: var(--primary);">Cart</a> &nbsp;/&nbsp; 
+            <span>Secure Checkout</span>
+        </div>
+        
+        <h1 class="title-md" style="margin-bottom: 2.5rem;">Secure Checkout</h1>
+        
+        <div class="checkout-grid">
+            <!-- Left Side: Shipping & Payment form -->
+            <div class="checkout-form-card">
+                <form id="checkout-form" action="/checkout" method="POST">
+                    
+                    <!-- Section 1: Customer & Shipping Details -->
+                    <div class="checkout-section">
+                        <h3><span>1</span> Shipping Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="customer-name">Full Name *</label>
+                            <input type="text" id="customer-name" name="customer_name" required placeholder="e.g. Rajesh Kumar">
+                        </div>
+                        
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label for="customer-email">Email Address *</label>
+                                <input type="email" id="customer-email" name="customer_email" required placeholder="e.g. rajesh@gmail.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="customer-phone">Contact Phone Number *</label>
+                                <input type="tel" id="customer-phone" name="customer_phone" required placeholder="e.g. +91 98765 43210">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="shipping-address">Full Shipping Address *</label>
+                            <textarea id="shipping-address" name="shipping_address" rows="3" required placeholder="Apartment/Street details, Locality, City, State, Pincode"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Section 2: Payment (Interactive 3D Credit Card) -->
+                    <div class="checkout-section">
+                        <h3><span>2</span> Payment Information</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; margin-top: -1rem;">We accept all major secure international and domestic cards.</p>
+                        
+                        <!-- Credit Card 3D Animation Box -->
+                        <div class="card-wrapper">
+                            <div class="credit-card-mockup">
+                                <div class="card-front">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div class="card-chip"></div>
+                                        <span style="font-style: italic; font-weight: bold; letter-spacing: 1px; font-size: 0.95rem;">VASTRA SECURE</span>
+                                    </div>
+                                    <div class="card-number-display">•••• •••• •••• ••••</div>
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                        <div>
+                                            <div style="font-size: 0.55rem; text-transform: uppercase; opacity: 0.7; margin-bottom: 2px;">Card Holder</div>
+                                            <div class="card-holder-display">Card Holder Name</div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 0.55rem; text-transform: uppercase; opacity: 0.7; margin-bottom: 2px; text-align: right;">Expires</div>
+                                            <div class="card-expiry-display">MM/YY</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-back">
+                                    <div class="card-black-stripe"></div>
+                                    <div style="margin-top: 1rem; padding: 0 1.5rem;">
+                                        <div style="font-size: 0.55rem; text-transform: uppercase; opacity: 0.7; margin-bottom: 5px; text-align: right; color: white;">Security Code</div>
+                                        <div class="card-cvv-stripe"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Form Inputs for Card details -->
+                        <div class="form-group">
+                            <label for="card-number">Credit/Debit Card Number *</label>
+                            <input type="text" id="card-number" required placeholder="4111 2222 3333 4444" autocomplete="cc-number">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-name">Cardholder Name *</label>
+                            <input type="text" id="card-name" required placeholder="Name as printed on card" autocomplete="cc-name">
+                        </div>
+                        
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label for="card-expiry">Expiration Date *</label>
+                                <input type="text" id="card-expiry" required placeholder="MM/YY" autocomplete="cc-exp">
+                            </div>
+                            <div class="form-group">
+                                <label for="card-cvv">CVV Code *</label>
+                                <input type="password" id="card-cvv" required placeholder="•••" autocomplete="cc-csc">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; height: 50px; font-size: 1.1rem; margin-top: 1rem;">
+                        🔒 Confirm Order & Pay (Mock Process)
+                    </button>
+                    
+                </form>
+            </div>
+            
+            <!-- Right Side: Order Review Summary -->
+            <div class="checkout-summary-card">
+                <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color);">Review Your Order</h3>
+                
+                <div class="checkout-summary-items">
+                    {% for item in cart_data['items'] %}
+                    <div class="checkout-summary-item">
+                        <span class="title"><strong>{{ item.quantity }}x</strong> {{ item.name }}</span>
+                        <span>₹{{ "{:,.2f}".format(item.price * item.quantity) }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>₹{{ "{:,.2f}".format(cart_data.total_amount) }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping Fee</span>
+                    <span style="color: #28a745; font-weight: 600;">FREE</span>
+                </div>
+                <div class="summary-row total" style="margin-top:1rem; border-top:1px solid var(--border-color); padding-top:1rem; font-size: 1.2rem; font-weight:700; color:var(--secondary);">
+                    <span>Grand Total</span>
+                    <span>₹{{ "{:,.2f}".format(cart_data.total_amount) }}</span>
+                </div>
+                
+                <div style="background-color: var(--bg-warm); padding: 1rem; border-radius: 4px; border: 1px solid var(--border-color); margin-top: 1.5rem; font-size: 0.8rem; line-height: 1.4; color: var(--text-charcoal);">
+                    💡 <strong>Mock Payment System:</strong> You can enter any mock card credentials to proceed with checkout. No money will be transacted. Form validates formats.
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+{% endblock %}

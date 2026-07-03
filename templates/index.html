@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}{{ store_settings.store_name }} - {{ store_settings.store_tagline }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container hero-content">
+        <span class="hero-subtitle">{{ store_settings.hero_subtitle }}</span>
+        <h1 class="title-lg">{{ store_settings.hero_title }}</h1>
+        <p>{{ store_settings.hero_description }}</p>
+        <div style="display: flex; gap: 1rem;">
+            <a href="/products" class="btn btn-accent">Shop Collection</a>
+            <a href="#our-story" class="btn btn-outline" style="color: white; border-color: white;">Our Story</a>
+        </div>
+    </div>
+</section>
+
+<!-- Values Proposition Bar -->
+<section class="section" style="padding: 3rem 0; background-color: var(--bg-white); border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+        <div class="features-grid">
+            <div class="feature-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <h4>100% Authentic</h4>
+                <p>GI-tagged looms only</p>
+            </div>
+            <div class="feature-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                <h4>Artisan Fair-Trade</h4>
+                <p>Direct profit sharing</p>
+            </div>
+            <div class="feature-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 0-7.38 16.75L3 21l2.25-1.62A10 10 0 1 0 12 2z"></path></svg>
+                <h4>Organic & Natural</h4>
+                <p>Vegetable & herbal dyes</p>
+            </div>
+            <div class="feature-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                <h4>Free Shipping</h4>
+                <p>On orders above ₹1,999</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Heritage Categories -->
+<section class="section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Artisanal Categories</h2>
+            <p>Thoughtfully crafted styles for every wardrobe</p>
+        </div>
+        
+        <div class="grid-4">
+            <div class="cat-card">
+                <div class="cat-img-wrapper">
+                    <img src="/static/images/ikat_saree.jpg" alt="Handwoven Sarees">
+                </div>
+                <div class="cat-info">
+                    <h3>Sarees</h3>
+                    <p>Banarasi, Ikat, & Linen Sarees</p>
+                    <a href="/products?category=Saree" class="btn btn-outline" style="margin-top: 1rem; width: 100%;">View Sarees</a>
+                </div>
+            </div>
+            
+            <div class="cat-card">
+                <div class="cat-img-wrapper">
+                    <img src="/static/images/khadi_kurta.jpg" alt="Artisan Kurtas">
+                </div>
+                <div class="cat-info">
+                    <h3>Kurtas</h3>
+                    <p>Khadi & Linen Men's Wear</p>
+                    <a href="/products?category=Kurta" class="btn btn-outline" style="margin-top: 1rem; width: 100%;">View Kurtas</a>
+                </div>
+            </div>
+            
+            <div class="cat-card">
+                <div class="cat-img-wrapper">
+                    <img src="/static/images/linen_shirt.jpg" alt="Casual Shirts">
+                </div>
+                <div class="cat-info">
+                    <h3>Shirts</h3>
+                    <p>Sustainable Casual Linen Wear</p>
+                    <a href="/products?category=Shirt" class="btn btn-outline" style="margin-top: 1rem; width: 100%;">View Shirts</a>
+                </div>
+            </div>
+            
+            <div class="cat-card">
+                <div class="cat-img-wrapper">
+                    <img src="/static/images/indigo_stole.jpg" alt="Hand-printed Stoles">
+                </div>
+                <div class="cat-info">
+                    <h3>Stoles</h3>
+                    <p>Natural Indigo Block Printed</p>
+                    <a href="/products?category=Stole" class="btn btn-outline" style="margin-top: 1rem; width: 100%;">View Stoles</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="section" style="background-color: var(--bg-white);">
+    <div class="container">
+        <div class="section-title">
+            <h2>Artisan Spotlight</h2>
+            <p>Our featured handwoven masterpieces</p>
+        </div>
+        
+        <div class="grid-3">
+            {% for product in featured_products %}
+            <div class="product-card">
+                <span class="prod-tag">Artisan Pick</span>
+                <div class="prod-img-wrapper">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                </div>
+                <div class="prod-details">
+                    <span class="prod-meta">{{ product.material }} • {{ product.weave }}</span>
+                    <a href="/product/{{ product.id }}"><h3 class="prod-title">{{ product.name }}</h3></a>
+                    <div class="prod-price">₹{{ "{:,.2f}".format(product.price) }}</div>
+                    
+                    <div class="prod-actions">
+                        <a href="/product/{{ product.id }}" class="btn btn-outline">Details</a>
+                        <button class="btn btn-primary" onclick="addToCart({{ product.id }})">Quick Add</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div style="text-align: center; margin-top: 3.5rem;">
+            <a href="/products" class="btn btn-secondary">Explore Entire Catalog</a>
+        </div>
+    </div>
+</section>
+
+<!-- Our Story / Artisan Spotlight section -->
+<section class="section artisan-section" id="our-story">
+    <div class="container grid-2">
+        <div class="artisan-img-wrapper">
+            <!-- Reuse our handloom loom image or cotton table image -->
+            <img src="/static/images/hero_handloom.jpg" alt="Weaving loom close-up" style="width:100%; height:450px; object-fit:cover;">
+        </div>
+        <div class="artisan-content">
+            <span style="color: var(--accent); font-weight:600; text-transform:uppercase; letter-spacing:2px; font-size:0.9rem;">The {{ store_settings.store_name.split(' ')[0] }} Philosophy</span>
+            <h3 class="title-md">Embracing Slow, Sustainable Fashion</h3>
+            <p>{{ store_settings.store_name }} was born out of a desire to protect India’s vanishing textile crafts and elevate the livelihoods of traditional artisans. Every garment in our store tells a story: from the cotton harvested in organic fields, to natural indigo vats, to the rhythmic clicking of the loom.</p>
+            <p>By bypassing middle-men, we ensure that over 75% of the sales price goes directly back to the weaver collectives. In buying a {{ store_settings.store_name.split(' ')[0] }} product, you are not just acquiring a premium garment, but you are carrying forward a centuries-old cultural heritage.</p>
+            <a href="/products" class="btn btn-accent" style="width:fit-content;">Support Our Weavers</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
