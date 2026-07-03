@@ -144,6 +144,42 @@
                 </div>
                 {% endif %}
             </div>
+
+            <!-- Subscribers Table Card -->
+            <div class="table-card" style="margin-top: 3rem; margin-bottom: 3rem;">
+                <div class="table-card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="font-size: 1.25rem; font-weight: 600;">Newsletter Subscribers</h3>
+                    <span style="background-color: var(--primary); color: white; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                        {{ metrics.subscribers_count }} Registered
+                    </span>
+                </div>
+                
+                {% if subscribers %}
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Email Address</th>
+                            <th>Subscribed On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sub in subscribers %}
+                        <tr>
+                            <td><strong>#SUB-{{ sub.id }}</strong></td>
+                            <td><strong style="color: var(--secondary);">{{ sub.email }}</strong></td>
+                            <td style="font-size: 0.85rem; color: var(--text-muted);">{{ sub.created_at.strftime('%d-%b-%Y %I:%M %p') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div style="text-align: center; padding: 3rem 0; color: var(--text-muted);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4; margin-bottom: 1rem;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <p>No active newsletter subscribers yet.</p>
+                </div>
+                {% endif %}
+            </div>
         </main>
     </div>
 

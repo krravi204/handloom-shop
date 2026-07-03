@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupCartDrawer();
     setupCreditCardInteraction();
     setupFilters();
+    setupNewsletter();
 });
 
 // Toast message helper
@@ -343,4 +344,38 @@ function setupFilters() {
             filterForm.submit();
         });
     }
+}
+
+// Active Newsletter Subscription Submission
+function setupNewsletter() {
+    const form = document.getElementById('newsletter-form');
+    if (!form) return;
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const emailInput = document.getElementById('newsletter-email');
+        if (!emailInput) return;
+        
+        const email = emailInput.value.trim();
+        if (!email) return;
+        
+        fetch('/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showToast(data.message, 'success');
+                form.reset();
+            } else {
+                showToast(data.message, 'error');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            showToast("Connection error. Please try again.", 'error');
+        });
+    });
 }

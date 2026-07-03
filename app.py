@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash
-from models import db, Product, Order, OrderItem, StoreSettings
+from models import db, Product, Order, OrderItem, StoreSettings, Subscriber
 from database import init_db
 
 app = Flask(__name__)
@@ -336,7 +336,10 @@ def admin_dashboard():
         'avg_order': avg_order
     }
     
-    return render_template('admin/dashboard.html', orders=orders, metrics=metrics)
+    subscribers = Subscriber.query.order_by(Subscriber.id.desc()).all()
+    metrics['subscribers_count'] = len(subscribers)
+    
+    return render_template('admin/dashboard.html', orders=orders, metrics=metrics, subscribers=subscribers)
 
 @app.route('/admin/order/update/<int:order_id>', methods=['POST'])
 def admin_order_update(order_id):
@@ -447,6 +450,31 @@ def admin_settings():
         return redirect(url_for('admin_settings'))
         
     return render_template('admin/settings.html', settings=settings)
+
+@app.route('/subscribe', methods=['POST'])
+def subscribe():
+    email = None
+    if request.is_json:
+        data = request.get_json() or {}
+        email = data.get('email', '').strip()
+    else:
+        email = request.form.get('email', '').strip()
+        
+    if not email or '@' not in email:
+        return jsonify({'success': False, 'message': 'Please enter a valid email address.'}), 400
+        
+    existing = Subscriber.query.filter_by(email=email).first()
+    if existing:
+        return jsonify({'success': True, 'message': 'You are already subscribed!'})
+        
+    try:
+        new_subscriber = Subscriber(email=email)
+        db.session.add(new_subscriber)
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Thank you for subscribing to our artisan newsletter!'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': 'An error occurred. Please try again later.'}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8000)
